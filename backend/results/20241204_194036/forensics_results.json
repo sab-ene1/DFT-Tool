@@ -1,0 +1,42 @@
+{
+  "system_scan": [],
+  "network_scan": {
+    "arp_scan": [
+      {
+        "ip": "192.168.1.1",
+        "mac": "54:47:e8:bd:b1:2d",
+        "timestamp": "2024-12-04T19:40:39.129915"
+      },
+      {
+        "ip": "192.168.1.37",
+        "mac": "14:ac:60:4b:72:e3",
+        "timestamp": "2024-12-04T19:40:39.129915"
+      },
+      {
+        "ip": "192.168.1.40",
+        "mac": "20:e8:16:00:91:36",
+        "timestamp": "2024-12-04T19:40:39.129915"
+      }
+    ],
+    "network_info": {
+      "bytes_sent": 1190584738,
+      "bytes_recv": 1648686802,
+      "packets_sent": 2271612,
+      "packets_recv": 2462927,
+      "scan_time": "2024-12-04T19:40:39.157928",
+      "active_interfaces": [
+        "Ethernet 3",
+        "Local Area Connection* 9",
+        "Local Area Connection* 10",
+        "VMware Network Adapter VMnet1",
+        "VMware Network Adapter VMnet8",
+        "Wi-Fi",
+        "Ethernet",
+        "vEthernet (WSL (Hyper-V firewall))",
+        "Loopback Pseudo-Interface 1"
+      ]
+    },
+    "scan_timestamp": "2024-12-04T19:40:39.157928"
+  },
+  "memory_analysis": {}
+}

@@ -1,0 +1,13 @@
+2024-12-04 17:26:44,806 - INFO - Starting forensics triage session at 20241204_172644
+2024-12-04 17:26:44,812 - INFO - Loaded 2 YARA rule files from C:\Users\Sujal sen\Desktop\forensics_tool\yara_rules
+2024-12-04 17:27:01,605 - INFO - Analyzed 266 running processes
+2024-12-04 17:27:03,647 - INFO - Analyzed 9652 loaded modules
+2024-12-04 17:27:03,647 - INFO - Memory analysis completed.
+2024-12-04 17:27:03,664 - INFO - Results saved to results\20241204_172644\forensics_results.json
+2024-12-04 17:27:04,253 - WARNING - No file size data available for visualization.
+2024-12-04 17:27:04,254 - WARNING - Error getting disk usage for C:\: argument 1 (impossible<bad format char>)
+2024-12-04 17:27:04,255 - WARNING - Error getting disk usage for D:\: argument 1 (impossible<bad format char>)
+2024-12-04 17:27:04,328 - WARNING - No disk usage data available for visualization.
+2024-12-04 17:27:04,330 - WARNING - No ARP scan data available for visualization.
+2024-12-04 17:27:04,915 - INFO - Memory visualization: Top CPU Processes created.
+2024-12-04 17:27:04,967 - INFO - Memory visualization: Top Memory Processes created.

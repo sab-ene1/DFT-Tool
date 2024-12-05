@@ -1,0 +1,7 @@
+psutil==5.9.5
+yara-python==4.2.3
+plotly==5.15.0
+pandas==1.5.3
+scapy==2.4.5
+rich==13.5.2
+tenacity==8.2.2

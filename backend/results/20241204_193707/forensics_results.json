@@ -1,0 +1,26 @@
+{
+  "system_scan": [],
+  "network_scan": {
+    "arp_scan": [],
+    "network_info": {
+      "bytes_sent": 1164602906,
+      "bytes_recv": 1646325585,
+      "packets_sent": 2244452,
+      "packets_recv": 2449636,
+      "scan_time": "2024-12-04T19:37:09.214560",
+      "active_interfaces": [
+        "Ethernet 3",
+        "Local Area Connection* 9",
+        "Local Area Connection* 10",
+        "VMware Network Adapter VMnet1",
+        "VMware Network Adapter VMnet8",
+        "Wi-Fi",
+        "Ethernet",
+        "vEthernet (WSL (Hyper-V firewall))",
+        "Loopback Pseudo-Interface 1"
+      ]
+    },
+    "scan_timestamp": "2024-12-04T19:37:09.215569"
+  },
+  "memory_analysis": {}
+}

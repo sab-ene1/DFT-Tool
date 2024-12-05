@@ -1,0 +1,9 @@
+2024-12-04 19:40:36,623 - INFO - Starting forensics triage session at 20241204_194036
+2024-12-04 19:40:39,129 - INFO - ARP scan discovered 3 devices
+2024-12-04 19:40:39,157 - INFO - Network scan completed.
+2024-12-04 19:40:39,168 - INFO - Results saved to results\20241204_194036\forensics_results.json
+2024-12-04 19:40:39,765 - WARNING - No file size data available for visualization.
+2024-12-04 19:40:39,765 - INFO - Retrieved disk usage for 2 drives
+2024-12-04 19:40:40,487 - INFO - System visualization: Disk Usage charts created.
+2024-12-04 19:40:40,582 - INFO - Network visualizations created successfully
+2024-12-04 19:40:40,582 - WARNING - No process data available for visualization.
