@@ -1,0 +1,28 @@
+logging:
+  level: INFO
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  file_rotation: 5  # Number of log files to keep
+
+scanning:
+  max_file_size: 10485760  # 10MB in bytes
+  min_file_size: 512  # Skip hashing for files smaller than this
+  parallel_workers: 4  # Number of worker processes for parallel scanning
+  hash_algorithm: 'sha256'
+  excluded_dirs: ['.git', '__pycache__', 'node_modules']
+  excluded_extensions: ['.pyc', '.pyo', '.pyd']
+
+output:
+  base_dir: './forensics_output'
+  report_format: 'json'
+  compress_results: true  # Compress large result files
+
+security:
+  sanitize_paths: true
+  max_symlink_depth: 3
+  skip_hidden_files: true
+  verify_signatures: true  # Verify digital signatures when available
+
+monitoring:
+  scan_timeout: 3600  # 1 hour in seconds
+  alert_on_timeout: true
+  alert_on_error: true
