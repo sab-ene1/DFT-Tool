@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Forensics Triage Tool</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">
+            Digital Forensics Triage Tool
+        </h1>
+
+        <!-- Upload Section -->
+        <div class="bg-white rounded-lg shadow-md p-6 mb-8">
+            <h2 class="text-xl font-semibold mb-4">Upload Files for Analysis</h2>
+            <div class="border-dashed border-2 border-gray-300 rounded-lg p-6 text-center" id="dropZone">
+                <input type="file" id="fileInput" class="hidden" webkitdirectory directory multiple>
+                <label for="fileInput" class="cursor-pointer">
+                    <div class="text-gray-600">
+                        <svg class="mx-auto h-12 w-12 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                        <p class="mb-2">Drag and drop files here or click to select</p>
+                        <p class="text-sm text-gray-500">Supported file types: All</p>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Scan Status -->
+        <div id="scanStatus" class="bg-white rounded-lg shadow-md p-6 mb-8 hidden">
+            <h2 class="text-xl font-semibold mb-4">Scan Status</h2>
+            <div class="space-y-4">
+                <div class="flex items-center">
+                    <div class="w-full bg-gray-200 rounded-full h-2.5">
+                        <div id="progressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    <span id="progressText" class="ml-4 text-sm font-medium text-gray-500">0%</span>
+                </div>
+                <p id="statusMessage" class="text-gray-600"></p>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="bg-white rounded-lg shadow-md p-6 hidden">
+            <h2 class="text-xl font-semibold mb-4">Scan Results</h2>
+            <div id="resultsContent" class="space-y-4">
+                <!-- Results will be populated here -->
+            </div>
+            <div class="mt-4">
+                <button id="downloadButton"
+                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
+                    Download Results
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentScanId = null;
+
+        // File upload handling
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const scanStatus = document.getElementById('scanStatus');
+        const statusMessage = document.getElementById('statusMessage');
+        const progressBar = document.getElementById('progressBar');
+        const progressText = document.getElementById('progressText');
+        const resultsSection = document.getElementById('resultsSection');
+        const downloadButton = document.getElementById('downloadButton');
+
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-blue-500');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('border-blue-500');
+        });
+
+        dropZone.addEventListener('drop', async (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-blue-500');
+            const files = e.dataTransfer.files;
+            await handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', async () => {
+            await handleFiles(fileInput.files);
+        });
+
+        async function handleFiles(files) {
+            scanStatus.classList.remove('hidden');
+            statusMessage.textContent = 'Preparing files for upload...';
+            updateProgress(0);
+
+            const formData = new FormData();
+            for (const file of files) {
+                formData.append('file', file);
+            }
+
+            try {
+                const response = await fetch('/api/scan/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Upload failed');
+
+                const data = await response.json();
+                currentScanId = data.scan_id;
+                statusMessage.textContent = 'Scan initiated...';
+                updateProgress(20);
+                pollScanStatus();
+
+            } catch (error) {
+                statusMessage.textContent = `Error: ${error.message}`;
+                updateProgress(0);
+            }
+        }
+
+        async function pollScanStatus() {
+            if (!currentScanId) return;
+
+            try {
+                const response = await fetch(`/api/scan/${currentScanId}`);
+                if (!response.ok) throw new Error('Failed to get scan status');
+
+                const data = await response.json();
+                updateScanStatus(data);
+
+                if (data.status === 'completed') {
+                    showResults(data);
+                } else if (data.status === 'error') {
+                    statusMessage.textContent = `Error: ${data.error}`;
+                } else {
+                    setTimeout(pollScanStatus, 1000);
+                }
+
+            } catch (error) {
+                statusMessage.textContent = `Error: ${error.message}`;
+            }
+        }
+
+        function updateScanStatus(data) {
+            let progress = 0;
+            switch (data.status) {
+                case 'pending':
+                    progress = 20;
+                    statusMessage.textContent = 'Scan pending...';
+                    break;
+                case 'processing':
+                    progress = 60;
+                    statusMessage.textContent = 'Processing files...';
+                    break;
+                case 'completed':
+                    progress = 100;
+                    statusMessage.textContent = 'Scan completed!';
+                    break;
+                case 'error':
+                    progress = 0;
+                    statusMessage.textContent = `Error: ${data.error}`;
+                    break;
+            }
+            updateProgress(progress);
+        }
+
+        function updateProgress(percent) {
+            progressBar.style.width = `${percent}%`;
+            progressText.textContent = `${percent}%`;
+        }
+
+        function showResults(data) {
+            resultsSection.classList.remove('hidden');
+            const resultsContent = document.getElementById('resultsContent');
+            resultsContent.innerHTML = `
+                <p class="text-green-600 font-semibold">Scan completed successfully!</p>
+                <p>Scan ID: ${currentScanId}</p>
+                <p>Completed: ${new Date(data.completed).toLocaleString()}</p>
+            `;
+
+            downloadButton.onclick = () => {
+                window.location.href = `/api/scan/${currentScanId}/results`;
+            };
+        }
+    </script>
+</body>
+</html>
